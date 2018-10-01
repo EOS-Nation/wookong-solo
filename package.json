@@ -4,6 +4,11 @@
   "description": "Wookong Solo",
   "main": "index.js",
   "types": "index.d.ts",
+  "files": [
+    "dllimport",
+    "index.js",
+    "index.d.ts"
+  ],
   "scripts": {
     "prepare": "tsc",
     "test": "ts-node test.ts",

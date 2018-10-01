@@ -4,7 +4,7 @@ const BigNumber = require("bignumber.js");
 const sprintf = require("sprintf-js");
 const wallet_conf = require("../../configs/wallet_config.json");
 const { EOSTXSign } = require("../dllimport/EOSTXSign");
-const { EOSTXSign } = require("../dllimport/EOSGetAddress");
+const { EOSGetAddress } = require("../dllimport/EOSGetAddress");
 const {
     DLLRET,
     DLLPSTEP,
@@ -300,7 +300,7 @@ const signTx = async actions => {
         txChainID.copy(txDataPad, 0);
         txData.copy(txDataPad, txChainID.length);
         cfData.copy(txDataPad, txChainID.length + txData.length);
-        
+
         console.log(txData.toString("hex"));
         console.log(txDataPad.toString("hex"));
 

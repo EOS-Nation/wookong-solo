@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Wookong Solo",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,11 +18,14 @@
   "license": "MIT",
   "homepage": "https://github.com/EOS-Nation/wookong-solo",
   "dependencies": {
+    "debug": "4.x",
     "ffi": "2.x",
-    "global": "^4.3.2",
     "ref": "1.x",
     "ref-array": "1.x",
-    "sprintf-js": "1.x",
-    "typescript": "^3.2.0-dev.20180929"
+    "sprintf-js": "1.x"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "typescript": "*"
   }
 }

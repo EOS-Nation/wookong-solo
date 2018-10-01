@@ -1,0 +1,27 @@
+{
+  "name": "wookong-solo",
+  "version": "0.1.0",
+  "description": "Wookong Solo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wookong",
+    "solo"
+  ],
+  "author": "EOS Cybex",
+  "contributors": [
+    "EOS Nation"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/EOS-Nation/wookong-solo",
+  "dependencies": {
+    "ffi": "2.x",
+    "global": "^4.3.2",
+    "ref": "1.x",
+    "ref-array": "1.x",
+    "sprintf-js": "1.x",
+    "typescript": "^3.2.0-dev.20180929"
+  }
+}

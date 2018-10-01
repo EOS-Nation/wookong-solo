@@ -1,5 +1,6 @@
 const sprintf = require("sprintf-js");
 const ref = require("ref");
+const debug = require("debug")("wookong-solo:GetDevInfo");
 const { DLLAPI } = require("./dllfunction");
 const { DLLUTIL } = require("./dllutility");
 const { DLLRET, DLLDEVINFO, DLLDEVTYPE } = require("./dllconst");
@@ -45,7 +46,7 @@ const ShowDevInfo = devInfo => {
             DLLUTIL.ewallet_print_buf(devInfo.pbSessKeyHash.buffer) +
             "\n";
     }
-    console.log(strOutput);
+    debug(strOutput);
 };
 
 const GetDevInfo = async (szDevName, callbackFunc, callbackParam) => {

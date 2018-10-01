@@ -1,12 +1,13 @@
 const ref = require("ref");
+const debug = require("debug")("wookong-solo:dllfunction");
 const ffi = require("ffi");
 const path = require("path");
-var Struct = require('ref-struct');
-var Array = require('ref-array');
+const Struct = require('ref-struct');
+const Array = require('ref-array');
 
 const { DLLTYPE } = require("./dllstruct");
 //const { uint32Array, voidPP } = DLLTYPE;
-var TYPE = {};
+const TYPE = {};
 TYPE.voidPP = ref.refType(ref.refType(ref.types.void));
 TYPE.uint8 = ref.types.uint8;
 TYPE.uint32 = ref.types.uint32;
@@ -17,10 +18,10 @@ TYPE.uchar = ref.types.uchar;
 TYPE.ucharArray = Array(ref.types.uchar);
 TYPE.strArray = Array(TYPE.ucharArray);
 
-let { uint8, uint32Array, uint64Array, ucharArray, strArray } = TYPE;
+const { uint8, uint32Array, uint64Array, ucharArray, strArray } = TYPE;
 
 
-var CallbackParam = Struct({
+const CallbackParam = Struct({
     pstep: 'int',
     pstatus: 'int',
     ret_value: 'int',
@@ -72,11 +73,11 @@ if (process.env.LIBDIR == undefined || process.env.LIBDIR == "") {
 let DLLAPI;
 
 const callback = ffi.Callback('int', [CallbackParam], function(cbparam) {
-    console.log("call back");
+    debug("call back");
   });
 
 try {
-    console.log("before"+DLLAPI);
+    debug("before"+DLLAPI);
     DLLAPI = ffi.Library(path.resolve(process.env.LIBDIR, "EWallet"), {
     PAEW_InitContextWithDevName: [
         "int",
@@ -199,8 +200,8 @@ try {
     ]
 });}
 catch (error) {
-    console.log("err"+error);
+    debug("err"+error);
 }
-console.log(DLLAPI);
-console.log(callback);
+debug(DLLAPI);
+debug(callback);
 module.exports = { DLLAPI,callback,CallbackParam,TYPE };

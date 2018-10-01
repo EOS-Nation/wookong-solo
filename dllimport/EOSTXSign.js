@@ -1,4 +1,5 @@
 const ref = require("ref");
+const debug = require("debug")("wookong-solo:EOSTXSign");
 const { DLLAPI, callback, CallbackParam, TYPE} = require("./dllfunction");
 const { DLLRET, DLLDEVINFO, DLLCONST, DLLCOINTYPE, DLLDEVTYPE } = require("./dllconst");
 const { PAEW_DevInfo } = require("./dllstruct");
@@ -48,7 +49,7 @@ const EOSTXSign = async (
 
     try {
         if (szDevName != undefined && szDevName != '' ) {
-            console.log('step 0.1------');
+            debug('step 0.1------');
             res = await new Promise((resolve, reject) => {
                 PAEW_InitContextWithDevName.async(
                     ppPAEWContext,
@@ -66,7 +67,7 @@ const EOSTXSign = async (
                 );
             });
         } else {
-            console.log('step 0.2------');
+            debug('step 0.2------');
             res = await new Promise((resolve, reject) => {
                 PAEW_InitContext.async(
                     ppPAEWContext,
@@ -83,7 +84,7 @@ const EOSTXSign = async (
                 );
             });
         }
-        console.log(`step 1------, res is ${res}`);
+        debug(`step 1------, res is ${res}`);
         res = await new Promise((resolve, reject) => {
             PAEW_GetDevInfo.async(
                 ppPAEWContext.deref(),
@@ -105,8 +106,8 @@ const EOSTXSign = async (
             );
         });
 
-        console.log(`step 2------, res is ${res}`);
-        console.log('ppPAEWContext.deref() is: ', ppPAEWContext.deref());
+        debug(`step 2------, res is ${res}`);
+        debug('ppPAEWContext.deref() is: ', ppPAEWContext.deref());
 
         if (
             devInfo.ucCOSType ==
@@ -136,10 +137,10 @@ const EOSTXSign = async (
             });
         }
 
-        console.log(`step 3------, res is ${res}`);
-        console.log('ppPAEWContext.deref() is: ', ppPAEWContext.deref());
-        console.log('puiDerivePath is: ', puiDerivePath);
-        console.log('nDerivePathLen is: ', nDerivePathLen);
+        debug(`step 3------, res is ${res}`);
+        debug('ppPAEWContext.deref() is: ', ppPAEWContext.deref());
+        debug('puiDerivePath is: ', puiDerivePath);
+        debug('nDerivePathLen is: ', nDerivePathLen);
         /*res = await new Promise((resolve, reject) => {
             PAEW_DeriveTradeAddress.async(
                 ppPAEWContext.deref(),
@@ -149,10 +150,10 @@ const EOSTXSign = async (
                 nDerivePathLen,
                 (err, res) => {
                     if (res == DLLRET.PAEW_RET_SUCCESS) {
-                        console.log('res == DLLRET.PAEW_RET_SUCCESS');
+                        debug('res == DLLRET.PAEW_RET_SUCCESS');
                         resolve(res);
                     } else {
-                        console.log(`res is: ${res}`);
+                        debug(`res is: ${res}`);
                         reject(res);
                     }
                 }
@@ -160,7 +161,7 @@ const EOSTXSign = async (
         });*/
         res = await PAEW_DeriveTradeAddress(ppPAEWContext.deref(), 0, DLLCOINTYPE.PAEW_COIN_TYPE_EOS, puiDerivePath, nDerivePathLen);
 
-        console.log(`step 4------, res is ${res}`);
+        debug(`step 4------, res is ${res}`);
         /*res = await new Promise((resolve, reject) => {
             PAEW_GetTradeAddress.async(
                 ppPAEWContext.deref(),
@@ -178,7 +179,7 @@ const EOSTXSign = async (
             );
         });*/
 
-        console.log('step 5------');
+        debug('step 5------');
         res = await new Promise((resolve, reject) => {
             PAEW_EOS_TXSign.async(
                 ppPAEWContext.deref(),
@@ -197,9 +198,9 @@ const EOSTXSign = async (
             );
         });
 
-        console.log('step 6------');
+        debug('step 6------');
 
-        
+
     } catch (err) {
         throw { result: err, payload: null };
     } finally {
@@ -212,7 +213,7 @@ const EOSTXSign = async (
                 }
             });
         });
-        console.log(`PAEW_FreeContext returns ${res}`);
+        debug(`PAEW_FreeContext returns ${res}`);
     }
 
     return {

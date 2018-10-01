@@ -1,5 +1,6 @@
 const ref = require("ref");
-var {
+const debug = require("debug")("wookong-solo:EOSGetAddress");
+const {
     DLLAPI,
     callback,
     CallbackParam,
@@ -12,7 +13,7 @@ const { DLLUTIL } = require("./dllutility");
 
 const { DLLTYPE } = require("./dllstruct");
 //const { uint32Array } = DLLTYPE;
-let { voidPP, uint32Array, ucharArray } = TYPE;
+const { voidPP, uint32Array, ucharArray } = TYPE;
 
 //const voidPP = ref.refType(ref.refType(ref.types.void));
 
@@ -33,10 +34,10 @@ const EOSGetAddress = async (
     var pnDevCount = ref.alloc("int");
     var param = new CallbackParam();
     let pDevInfo = ref.alloc(PAEW_DevInfo);
-    console.log('derivePath', derivePath);
+    debug('derivePath', derivePath);
     let puiDerivePath = uint32Array(derivePath);
-    console.log('puiDerivePath', puiDerivePath.length);
-    console.log(puiDerivePath);
+    debug('puiDerivePath', puiDerivePath.length);
+    debug(puiDerivePath);
     let nDerivePathLen = derivePath.length;
 
     let pbTradeAddress = new Buffer(DLLCONST.PAEW_COIN_ADDRESS_MAX_LEN);
@@ -45,11 +46,11 @@ const EOSGetAddress = async (
     let res = 0;
 
     try {
-        //console.log(ppPAEWContext);
-        //console.log(pnDevCount);
-        //console.log(callback);
-        //console.log(param);
-        console.log(DLLAPI.PAEW_InitContext);
+        //debug(ppPAEWContext);
+        //debug(pnDevCount);
+        //debug(callback);
+        //debug(param);
+        debug(DLLAPI.PAEW_InitContext);
 
         res = await DLLAPI.PAEW_InitContext(
 				ppPAEWContext,
@@ -57,8 +58,8 @@ const EOSGetAddress = async (
                 callback,
                 param.ref());
 
-        console.log("PAEW_InitContext");
-        console.log(pnDevCount);
+        debug("PAEW_InitContext");
+        debug(pnDevCount);
       /*  res = await new Promise((resolve, reject) => {
             PAEW_DeriveTradeAddress.async(
                 ppPAEWContext.deref(),
@@ -75,8 +76,8 @@ const EOSGetAddress = async (
                 }
             );
         });*/
-        console.log(puiDerivePath);
-        console.log(nDerivePathLen);
+        debug(puiDerivePath);
+        debug(nDerivePathLen);
 
         res = await DLLAPI.PAEW_DeriveTradeAddress(
             ppPAEWContext.deref(),
@@ -85,8 +86,8 @@ const EOSGetAddress = async (
                 puiDerivePath,
                 nDerivePathLen,
         );
-        console.log("PAEW_DeriveTradeAddress");
-        console.log(res);
+        debug("PAEW_DeriveTradeAddress");
+        debug(res);
 
        /* res = await new Promise((resolve, reject) => {
             PAEW_GetTradeAddress.async(
@@ -112,8 +113,8 @@ const EOSGetAddress = async (
             pbTradeAddress,
             pnTradeAddressLen,
         );
-        console.log("PAEW_GetTradeAddress");
-        console.log(pbTradeAddress);
+        debug("PAEW_GetTradeAddress");
+        debug(pbTradeAddress);
 
        /* res = await new Promise((resolve, reject) => {
             PAEW_FreeContext.async(ppPAEWContext.deref(), (err, res) => {
@@ -127,11 +128,11 @@ const EOSGetAddress = async (
         res =await DLLAPI.PAEW_FreeContext(
             ppPAEWContext.deref()
         );
-        console.log("PAEW_FreeContext");
+        debug("PAEW_FreeContext");
 
     } catch (err) {
         throw { result: err, payload: null };
-        console.log("result: err"+err);
+        debug("result: err"+err);
     }
 
     return {

@@ -5,7 +5,9 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "tsc",
+    "test": "ts-node test.ts",
+    "docs": "tsc && documentation readme index.js --section=API"
   },
   "keywords": [
     "wookong",
@@ -26,6 +28,8 @@
   },
   "devDependencies": {
     "@types/node": "*",
+    "documentation": "*",
+    "ts-node": "*",
     "typescript": "*"
   }
 }

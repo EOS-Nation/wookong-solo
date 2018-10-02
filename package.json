@@ -26,9 +26,10 @@
   "homepage": "https://github.com/EOS-Nation/wookong-solo",
   "dependencies": {
     "debug": "4.x",
-    "ffi": "2.x",
+    "fastcall": "*",
     "ref": "1.x",
     "ref-array": "1.x",
+    "ref-struct": "1.x",
     "sprintf-js": "1.x"
   },
   "devDependencies": {

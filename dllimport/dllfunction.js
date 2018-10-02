@@ -1,6 +1,7 @@
 const ref = require("ref");
+const os = require("os");
 const debug = require("debug")("wookong-solo:dllfunction");
-const ffi = require("ffi");
+const { ffi } = require("fastcall");
 const path = require("path");
 const Struct = require('ref-struct');
 const Array = require('ref-array');
@@ -18,7 +19,7 @@ TYPE.uchar = ref.types.uchar;
 TYPE.ucharArray = Array(ref.types.uchar);
 TYPE.strArray = Array(TYPE.ucharArray);
 
-const { uint8, uint32Array, uint64Array, ucharArray, strArray } = TYPE;
+const { uint8, uchar, uint32Array, uint64Array, ucharArray, strArray } = TYPE;
 
 
 const CallbackParam = Struct({
@@ -74,134 +75,137 @@ let DLLAPI;
 
 const callback = ffi.Callback('int', [CallbackParam], function(cbparam) {
     debug("call back");
-  });
+});
+
+const lib = (os.platform() === "darwin") ? "EWallet.dylib" : "EWallet.dll";
+const libPath = path.resolve(process.env.LIBDIR, lib);
 
 try {
-    debug("before"+DLLAPI);
-    DLLAPI = ffi.Library(path.resolve(process.env.LIBDIR, "EWallet"), {
-    PAEW_InitContextWithDevName: [
-        "int",
-        ['pointer', "string", "uchar", "pointer", "pointer"]
-    ],
-    PAEW_InitContext: ["int", ['pointer', "pointer", "pointer", "pointer"]],
-    PAEW_FreeContext: ["int", ["pointer"]],
-    PAEW_GetDevInfo: ["int", ["pointer", "size_t", "uint32", "pointer"]],
-    PAEW_GenerateSeed: [
-        "int",
-        ["pointer", "size_t", "uchar", "uchar", "uchar"]
-    ],
-    PAEW_ImportSeed: ["int", ["pointer", "size_t", "pointer", "size_t"]],
-    PAEW_DeriveTradeAddress: [
-        "int",
-        ["pointer", "size_t", "uchar", uint32Array, "size_t"]
-    ],
-    PAEW_GetTradeAddress: [
-        "int",
-        ["pointer", "size_t", "uchar","uchar", "pointer", "pointer"]
-    ],
-    PAEW_BTC_TXSign: [
-        "int",
-        [
-            "pointer",
-            "size_t",
-            "size_t",
-            "pointer",
-            "pointer",
-            "pointer",
-            "size_t",
-            "pointer",
-            "pointer"
-        ]
-    ],
-    PAEW_SetERC20Info: [
-        "int",
-        ["pointer", "size_t", "uchar", "pointer", "uchar"]
-    ],
-    PAEW_ETH_TXSign: [
-        "int",
-        ["pointer", "size_t", "pointer", "size_t", "pointer", "pointer"]
-    ],
-    PAEW_CYB_TXSign: [
-        "int",
-        ["pointer", "size_t", "pointer", "size_t", "pointer", "pointer"]
-    ],
-    PAEW_EOS_TXSign: [
-        "int",
-        ["pointer", "size_t", "pointer", "size_t", "pointer", "pointer"]
-    ],
-    PAEW_LTC_TXSign: [
-        "int",
-        [
-            "pointer",
-            "size_t",
-            "size_t",
-            "pointer",
-            "pointer",
-            "pointer",
-            "size_t",
-            "pointer",
-            "pointer"
-        ]
-    ],
-    PAEW_NEO_TXSign: [
-        "int",
-        [
-            "pointer",
-            "size_t",
-            "size_t",
-            "pointer",
-            "pointer",
-            "pointer",
-            "size_t",
-            "pointer",
-            "pointer"
-        ]
-    ],
-    PAEW_BTC_WIT_TXSign: [
-        "int",
-        [
-            "pointer",
-            "size_t",
-            "size_t",
-            "pointer",
-            "pointer",
-            "pointer",
-            "size_t",
-            "pointer",
-            "pointer"
-        ]
-    ],
-    PAEW_ClearCOS: ["int", ["pointer", "size_t"]],
-    PAEW_UpdateCOS: ["int", ["pointer", "size_t", "pointer", "size_t"]],
-    PAEW_ChangePIN: ["int", ["pointer", "size_t"]],
-    PAEW_Format: ["int", ["pointer", "size_t"]],
-    PAEW_RecoverSeedFromMne: [
-        "int",
-        ["pointer", "size_t", "pointer", "pointer"]
-    ],
-    PAEW_RecoverMneFromMneGroup: [
-        "int",
-        ["size_t", "pointer", "pointer", "pointer", "pointer"]
-    ],
-    PAEW_GetTradeAddressFromSeed: [
-        "int",
-        [
-            "pointer",
-            "size_t",
-            uint32Array,
-            "size_t",
-            "pointer",
-            "pointer",
-            "uchar",
-            "uchar",
-            "pointer",
-            "pointer"
-        ]
-    ]
-});}
-catch (error) {
-    debug("err"+error);
+    debug("loading DLLAPI");
+    DLLAPI = new ffi.Library(libPath, {
+        // PAEW_InitContextWithDevName: [
+        //     "int",
+        //     ['pointer', "string", "uchar", "pointer", "pointer"]
+        // ],
+        PAEW_InitContext: ["int", ['pointer', "pointer", "pointer", "pointer"]],
+        PAEW_FreeContext: ["int", ["pointer"]],
+        PAEW_GetDevInfo: ["int", ["pointer", "size_t", "uint32", "pointer"]],
+        // PAEW_GenerateSeed: [
+        //     "int",
+        //     ["pointer", "size_t", uchar, uchar, uchar]
+        // ],
+        PAEW_ImportSeed: ["int", ["pointer", "size_t", "pointer", "size_t"]],
+        PAEW_DeriveTradeAddress: [
+            "int",
+            ["pointer", "size_t", uint8, uint32Array, "size_t"]
+        ],
+        // PAEW_GetTradeAddress: [
+        //     "int",
+        //     ["pointer", "size_t", uchar, uchar, "pointer", "pointer"]
+        // ],
+        PAEW_BTC_TXSign: [
+            "int",
+            [
+                "pointer",
+                "size_t",
+                "size_t",
+                "pointer",
+                "pointer",
+                "pointer",
+                "size_t",
+                "pointer",
+                "pointer"
+            ]
+        ],
+        // PAEW_SetERC20Info: [
+        //     "int",
+        //     ["pointer", "size_t", uchar, "pointer", uchar]
+        // ],
+        PAEW_ETH_TXSign: [
+            "int",
+            ["pointer", "size_t", "pointer", "size_t", "pointer", "pointer"]
+        ],
+        PAEW_CYB_TXSign: [
+            "int",
+            ["pointer", "size_t", "pointer", "size_t", "pointer", "pointer"]
+        ],
+        PAEW_EOS_TXSign: [
+            "int",
+            ["pointer", "size_t", "pointer", "size_t", "pointer", "pointer"]
+        ],
+        PAEW_LTC_TXSign: [
+            "int",
+            [
+                "pointer",
+                "size_t",
+                "size_t",
+                "pointer",
+                "pointer",
+                "pointer",
+                "size_t",
+                "pointer",
+                "pointer"
+            ]
+        ],
+        PAEW_NEO_TXSign: [
+            "int",
+            [
+                "pointer",
+                "size_t",
+                "size_t",
+                "pointer",
+                "pointer",
+                "pointer",
+                "size_t",
+                "pointer",
+                "pointer"
+            ]
+        ],
+        PAEW_BTC_WIT_TXSign: [
+            "int",
+            [
+                "pointer",
+                "size_t",
+                "size_t",
+                "pointer",
+                "pointer",
+                "pointer",
+                "size_t",
+                "pointer",
+                "pointer"
+            ]
+        ],
+        PAEW_ClearCOS: ["int", ["pointer", "size_t"]],
+        PAEW_UpdateCOS: ["int", ["pointer", "size_t", "pointer", "size_t"]],
+        PAEW_ChangePIN: ["int", ["pointer", "size_t"]],
+        PAEW_Format: ["int", ["pointer", "size_t"]],
+        PAEW_RecoverSeedFromMne: [
+            "int",
+            ["pointer", "size_t", "pointer", "pointer"]
+        ],
+        PAEW_RecoverMneFromMneGroup: [
+            "int",
+            ["size_t", "pointer", "pointer", "pointer", "pointer"]
+        ],
+        // PAEW_GetTradeAddressFromSeed: [
+        //     "int",
+        //     [
+        //         "pointer",
+        //         "size_t",
+        //         uint32Array,
+        //         "size_t",
+        //         "pointer",
+        //         "pointer",
+        //         uchar,
+        //         uchar,
+        //         "pointer",
+        //         "pointer"
+        //     ]
+        // ]
+    });
+} catch (error) {
+    debug("err" + error);
 }
 debug(DLLAPI);
 debug(callback);
-module.exports = { DLLAPI,callback,CallbackParam,TYPE };
+module.exports = { DLLAPI, callback, CallbackParam, TYPE };

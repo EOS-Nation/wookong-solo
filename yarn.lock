@@ -3115,7 +3115,7 @@ ref-array@1.x:
     debug "2"
     ref "1"
 
-ref-struct@^1.1.0:
+ref-struct@1.x:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ref-struct/-/ref-struct-1.1.0.tgz#5d5ee65ad41cefc3a5c5feb40587261e479edc13"
   dependencies:
